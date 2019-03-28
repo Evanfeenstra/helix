@@ -1,19 +1,23 @@
-const Mam = require("mam.client/lib/mam.node.js");
 const db = require("./db");
 const {keyGen} = require('./utils')
 const {toTrytes, fromTrytes} = require('./iota')
+const Mam = require("./powsrvio/mam.client.js");
+const remoteATT = require('./powsrvio/powsrv.js')
 
 function MAM(){
   this.side_key  = process.env.SIDE_KEY || 'test'
 }
 
 MAM.prototype.init = function(r) {
-  let connected = false
+
+  const provider = process.env.IOTA_PROVIDER
+  if(!provider) throw new Error('Missing IOTA_PROVIDER in env')
+
+  this.mamState = Mam.init({
+    provider:provider,
+    attachToTangle: remoteATT(5000, null)
+  })
   r && r.length && r.forEach(service => {
-    if(service && service.iota){
-      Mam.init(service.iota)
-      connected = true
-    }
     if(service && service.broker){
       this.broker = service.broker
     }
@@ -21,7 +25,7 @@ MAM.prototype.init = function(r) {
       this.mqttClient = service.mqttClient
     }
   })
-  if(!connected) throw new Error('No IOTA node')
+  console.log('[MAM] ready')
 }
 
 MAM.prototype.get = async function(rooot, mode, sk) {
@@ -65,7 +69,8 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
     );
   }
 
-  //console.log(mamState)
+  // console.log("==========")
+  // console.log(mamState)
 
   let message
   try {
@@ -79,12 +84,14 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
   // Attach the payload.
   console.log("ATTACHING TO TANGLE................",mamState)
   try {
-    const attached = await Mam.attach(message.payload, message.address);
-    //console.log(attached)
+    const attached = await Mam.attach(message.payload, message.address, 3, 14);
+    console.log(attached)
     if(!attached){
+      console.log("ERROR ATTACHING")
       throw "Error attaching message  " + attached.message
     }
   } catch(e) {
+    console.log("NOT ATTACHED",e)
     throw "Message not attached  " + e.message
   }
 

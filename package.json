@@ -1,25 +1,22 @@
 {
   "main": "index.js",
   "scripts": {
-    "start": "node --inspect index.js",
-    "test-amqp": "node --inspect libs/amqp_test.js"
+    "start": "node --inspect index.js"
   },
   "dependencies": {
+    "@iota/converter": "^1.0.0-beta.11",
     "amqplib": "^0.5.2",
     "amqplib-retry": "^1.1.7",
     "cors": "^2.8.5",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "helmet": "^3.15.0",
-    "iota.crypto.js": "github:iotaledger/iota.crypto.js",
-    "iota.lib.js": "^0.5.1",
-    "iota.lib.js.powsrvio": "0.0.1",
     "jsonwebtoken": "^8.3.0",
-    "mam.client": "0.0.1",
     "moment": "^2.22.2",
     "mosca": "^2.8.3",
     "mqtt": "^2.18.3",
     "newrelic": "^4.11.0",
+    "node-fetch": "^2.3.0",
     "pg": "^7.4.3"
   }
 }

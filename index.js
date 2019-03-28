@@ -8,21 +8,16 @@ const api = require('./api')
 const broker = require('./broker')
 const mam = require('./mam')
 
-
 async function main() {
 
   try{
     
     const r = await Promise.all([
-
-      iota.connect(),
       amqp.connect(),
       db.connect(),
       mqtt.connect(),
       broker.init(),
-
     ])
-
     await mam.init(r)
     await api.init(r)
 
@@ -30,6 +25,9 @@ async function main() {
     console.error(e)
     process.kill(process.pid,'SIGTERM')
   }
+
+  // console.log("TEST")
+  // mam.postMam('test',{hi:'hi'},'sideKey')
 
   console.log("===== READY =====")
 }
