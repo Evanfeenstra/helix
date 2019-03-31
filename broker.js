@@ -52,7 +52,7 @@ function start(moscaSetting, BROKER_DEBUG) {
         resolve(broker)
     })
     broker.on("error", err => {
-        if(interval) clearInterval(pingInterval)
+        if(pingInterval) clearInterval(pingInterval)
         reject(err)
     })
 
