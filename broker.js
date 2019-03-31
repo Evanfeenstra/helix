@@ -99,7 +99,7 @@ async function init() {
         interfaces: [
             { type: "mqtt", port: parseInt(MQTT_PORT) || 1883 },
             // { type: "mqtts", port: 8883, credentials: { keyPath: SECURE_KEY, certPath: SECURE_CERT } },
-            { type: "http", port: parseInt(WS_PORT) || 80, bundle: true },
+            // { type: "http", port: parseInt(WS_PORT) || 80, bundle: true },
             // { type: "https", port: 3001, bundle: true, credentials: { keyPath: SECURE_KEY, certPath: SECURE_CERT } }
         ],
         stats: false,
