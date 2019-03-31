@@ -65,7 +65,7 @@ function start(moscaSetting, BROKER_DEBUG) {
         }
 
         if (packet.topic.startsWith('$SYS')) return
-        if (packet.topic.startsWith('stream-posted')) return
+        if (packet.topic.startsWith('streams')) return
         if (packet.topic.startsWith('ping')) return
         let m
         try {m = JSON.parse(packet.payload.toString('utf8'))}
@@ -77,16 +77,16 @@ function start(moscaSetting, BROKER_DEBUG) {
     });
 
     broker.pub = function(e) {
-        console.log("posted to stream",e)
+        //console.log("posted to stream",e)
         broker.publish({
-            topic: `stream-posted/${e.id}`,
+            topic: `streams/${e.id}`,
             payload: JSON.stringify({
               root: e.root
             }), // or a Buffer
             qos: 0, // 0, 1, or 2
             retain: false // or true
         }, function() {
-            console.log('done!');
+            //console.log('done!');
         });
     }
   })

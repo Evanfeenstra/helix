@@ -125,6 +125,7 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
   }
 
   console.log("LAST ROOT:", message.root);
+  console.log('https://mam.iota.studio?root=PASLMHWSMFIPXTGTYI9BDIMYFNB9BZNJGNWVLUBSZLOYIUVZ9SYTKYBDCACOIB9ZJDVCYWLYSUUODIFPF&sideKey=h2h&mode=restricted')
 
   if(this.broker){
     this.broker.pub({
@@ -137,7 +138,7 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
   }
 
   if(this.mqttClient){
-    this.mqttClient.publish(`stream-posted/${streamId}`, JSON.stringify({
+    this.mqttClient.publish(`streams/${streamId}`, JSON.stringify({
       id: streamId,
       root: message.root,
       start: message.state.channel.start,

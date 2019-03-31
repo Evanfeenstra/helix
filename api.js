@@ -31,6 +31,7 @@ async function init(r) {
   app.post('/stream/:id', async (req, res, next) => {
     console.log('/stream')
     const m = processor.makeId(req.body, req.url)
+    console.log(m)
     amqp.publish(m)
     return res.status(200).json({posted:true})
   })

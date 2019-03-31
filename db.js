@@ -38,8 +38,8 @@ module.exports = {
   getStreamById: async (id) => pool.query(`SELECT * from streams WHERE id=$1`,
     [id]),
 
-  // auto-unlock if a minute has passed (need to check the mam stream maybe?)
-  // there may or may not be a message in the stream
+  // lock stream so packets with the same id stay in queue
+  // until MAM channel is finished posting
   getStreamByIdAndLock: async (id) => {
     await pool.query(`BEGIN;`)
     // FOR UPDATE locks the transaction
