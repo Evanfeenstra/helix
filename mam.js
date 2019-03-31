@@ -32,12 +32,11 @@ MAM.prototype.init = function(r) {
 }
 
 MAM.prototype.get = async function(rooot, mode, sk) {
-  let sideKey
-  if(sk) sideKey = toTrytes(sk)
+  const sideKey = sk || this.side_key
     
-  console.log("REAL SIDE KEY",sideKey)
+  //console.log("REAL SIDE KEY",sideKey)
   try {
-    const m = await Mam.fetchSingle(rooot, mode, sideKey)
+    const m = await Mam.fetchSingle(rooot, mode, toTrytes(sideKey))
     return {
       data: fromTrytes(m.payload),
       next_root: m.nextRoot
@@ -102,7 +101,7 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
   try {
     // create OR update and unlock
     if (isFirst) {
-      console.log('IS FIRST stream',streamId)
+      console.log('is first in stream:',streamId)
       await db.createNewStream({
         id: streamId,
         first_root: message.root,
@@ -125,7 +124,7 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
   }
 
   console.log("LAST ROOT:", message.root);
-  console.log('https://mam.iota.studio?root=PASLMHWSMFIPXTGTYI9BDIMYFNB9BZNJGNWVLUBSZLOYIUVZ9SYTKYBDCACOIB9ZJDVCYWLYSUUODIFPF&sideKey=h2h&mode=restricted')
+  console.log(`https://mam.iota.studio?root=${message.root}&sideKey=${sideKey}&mode=restricted`)
 
   if(this.broker){
     this.broker.pub({
