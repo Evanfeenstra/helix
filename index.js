@@ -1,4 +1,3 @@
-require ('newrelic');
 require('dotenv').config()
 const amqp = require('./amqp')
 const db = require('./db')
