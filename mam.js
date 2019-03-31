@@ -15,11 +15,12 @@ MAM.prototype.init = function(r) {
 
   const provider = process.env.IOTA_PROVIDER
   if(!provider) throw new Error('Missing IOTA_PROVIDER in env')
-
+  console.log('starting mam')
   this.mamState = Mam.init({
     provider:provider,
     attachToTangle: remoteATT(5000, null)
   })
+  console.log(this.mamState)
   r && r.length && r.forEach(service => {
     if(service && service.broker){
       this.broker = service.broker

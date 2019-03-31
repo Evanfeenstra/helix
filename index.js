@@ -17,8 +17,8 @@ async function main() {
       mqtt.connect(),
       broker.init(),
     ])
-    await mam.init(r)
     await api.init(r)
+    await mam.init(r)
 
   } catch(e) {
     console.log("ERROR =========")
