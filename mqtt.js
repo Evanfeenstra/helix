@@ -4,9 +4,12 @@ const {processor} = require('./utils')
 
 async function connect(){
   try {
-    const client = await init.apply(this, arguments)
-    console.log('[MQTT] connected')
-    return {mqttClient:client}
+    const client = await init()  
+    if(client){
+      console.log('[MQTT] connected')
+      return {mqttClient:client}
+    }
+    return null
   } catch(e) {
     throw e
   }
@@ -17,7 +20,9 @@ function init() {
 
     const {MQTT_URL, MQTT_USERNAME, MQTT_PASSWORD, MQTT_TOPICS} = process.env
 
-    if(!MQTT_URL) return Promise.resolve(null) // ok to skip 
+    if(!MQTT_URL) {
+      return resolve(null) // ok to skip 
+    }
 
     const config = {}
     if(MQTT_USERNAME) config.username = MQTT_USERNAME

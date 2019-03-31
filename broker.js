@@ -36,7 +36,7 @@ var authorizeSubscribe = function (client, topic, callback) {
 function start(moscaSetting, BROKER_DEBUG) {
   return new Promise(function(resolve, reject) {
     const broker = new mosca.Server(moscaSetting)
-    console.log(broker)
+
     broker.on('ready', () => {
         broker.authenticate = authenticate;
         broker.authorizePublish = authorizePublish;
@@ -51,6 +51,7 @@ function start(moscaSetting, BROKER_DEBUG) {
         }, 30000)
         resolve(broker)
     })
+    
     broker.on("error", err => {
         if(pingInterval) clearInterval(pingInterval)
         reject(err)
@@ -89,13 +90,15 @@ function start(moscaSetting, BROKER_DEBUG) {
             //console.log('done!');
         });
     }
+
+    // let this resolve anyway if mosca isnt properly set up
+    setTimeout(()=> resolve(null), 5000)
   })
 }
 
 async function init() {
     const {MQTT_PORT, WS_PORT, BROKER_DEBUG} = process.env
     const mqtt_port = MQTT_PORT || 1883
-    console.log('init mosca')
     var moscaSetting = {
         interfaces: [
             { type: "mqtt", port: mqtt_port },
@@ -112,13 +115,15 @@ async function init() {
 
         //logger: { name: 'MoscaServer', level: 'debug' },
     }
-    console.log(moscaSetting)
+
     try {
-        console.log(BROKER_DEBUG)
         const broker = await start(moscaSetting, BROKER_DEBUG)
         if(BROKER_DEBUG) broker_log(broker)
-        console.log('[mosca] init')
-        return {broker:broker}
+        if(broker){
+            console.log('[mosca] init')
+            return {broker:broker}
+        }
+        return null   
     } catch (e) {
         throw e
     }
