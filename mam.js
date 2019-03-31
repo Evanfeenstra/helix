@@ -1,8 +1,11 @@
-const db = require("./db");
-const {keyGen} = require('./utils')
-const {toTrytes, fromTrytes} = require('./iota')
-const Mam = require("./powsrvio/mam.client.js");
+const Mam = require("./powsrvio/mam.client.js")
 const remoteATT = require('./powsrvio/powsrv.js')
+const { asciiToTrytes, trytesToAscii } = require('@iota/converter')
+const db = require("./db")
+const {keyGen} = require('./utils')
+
+const toTrytes = (a) => asciiToTrytes(JSON.stringify(a))
+const fromTrytes = (a) => JSON.parse(trytesToAscii(a))
 
 function MAM(){
   this.side_key  = process.env.SIDE_KEY || 'test'
@@ -82,10 +85,10 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
   //console.log("CREATE MESSAGE",message)
 
   // Attach the payload.
-  console.log("ATTACHING TO TANGLE................",mamState)
+  console.log("ATTACHING TO TANGLE................",streamId,mamState.channel.start)
   try {
     const attached = await Mam.attach(message.payload, message.address, 3, 14);
-    console.log(attached)
+    //console.log(attached)
     if(!attached){
       console.log("ERROR ATTACHING")
       throw "Error attaching message  " + attached.message

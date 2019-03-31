@@ -2,8 +2,8 @@ const mosca = require('mosca')
 const amqp = require('./amqp')
 const {processor} = require('./utils')
 
-var USERNAME = 'username'
-var PASSWORD = 'password'
+var USERNAME = process.env.MQTT_USERNAME || 'username'
+var PASSWORD = process.env.MQTT_PASSWORD || 'password'
 // var SECURE_KEY = __dirname + '/../../test/secure/tls-key.pem';
 // var SECURE_CERT = __dirname + '/../../test/secure/tls-cert.pem';
 
@@ -36,6 +36,7 @@ var authorizeSubscribe = function (client, topic, callback) {
 function start(moscaSetting, BROKER_DEBUG) {
   return new Promise(function(resolve, reject) {
     const broker = new mosca.Server(moscaSetting)
+
     broker.on('ready', () => {
         broker.authenticate = authenticate;
         broker.authorizePublish = authorizePublish;
@@ -72,12 +73,11 @@ function start(moscaSetting, BROKER_DEBUG) {
         if (!m) return
 
         const msg = processor.makeId(m, packet.topic)
-
-        amqp.publish(new Buffer(JSON.stringify(msg)))
+        amqp.publish(msg)
     });
 
     broker.pub = function(e) {
-        console.log("PUB NOW",e)
+        console.log("posted to stream",e)
         broker.publish({
             topic: `stream-posted/${e.id}`,
             payload: JSON.stringify({
@@ -93,13 +93,13 @@ function start(moscaSetting, BROKER_DEBUG) {
 }
 
 async function init() {
-    const {WS_PORT, BROKER_DEBUG} = process.env
+    const {MQTT_PORT, WS_PORT, BROKER_DEBUG} = process.env
 
     var moscaSetting = {
         interfaces: [
-            // { type: "mqtt", port: parseInt(BROKER_PORT_MQTT) || 5003 },
+            { type: "mqtt", port: parseInt(MQTT_PORT) || 1883 },
             // { type: "mqtts", port: 8883, credentials: { keyPath: SECURE_KEY, certPath: SECURE_CERT } },
-            { type: "http", port: parseInt(WS_PORT) || 5002, bundle: true },
+            { type: "http", port: parseInt(WS_PORT) || 80, bundle: true },
             // { type: "https", port: 3001, bundle: true, credentials: { keyPath: SECURE_KEY, certPath: SECURE_CERT } }
         ],
         stats: false,
@@ -110,49 +110,42 @@ async function init() {
         //onQoS2publish: 'noack', // can set to 'disconnect', or to 'dropToQoS1' if using a client which will eat puback for QOS 2; e.g. mqtt.js
 
         //logger: { name: 'MoscaServer', level: 'debug' },
-
-        //persistence: { factory: mosca.persistence.Redis, url: 'localhost:6379', ttl: { subscriptions: 1000 * 60 * 10, packets: 1000 * 60 * 10 } },
     }
 
     try {
         const broker = await start(moscaSetting, BROKER_DEBUG)
+        if(BROKER_DEBUG) broker_log(broker)
         console.log('[mosca] init')
         return {broker:broker}
     } catch (e) {
         throw e
     }
+}
 
-    if(BROKER_DEBUG
-        ){
-
-        broker.on('clientConnected', function (client) {
-            console.log("=======Connected=======");
-            console.log(client.id);
-            console.log("")
-        });
-
-        broker.on('subscribed', function (topic, client) {
-            console.log("=======Subscribed=======");
-            console.log(client.id);
-            console.log("")
-        });
-
-        broker.on('unsubscribed', function (topic, client) {
-            console.log("=======Connected=======");
-            console.log(client.id, topic);
-            console.log("")
-        });
-
-        broker.on('clientDisconnecting', function (client) {
-            console.log('clientDisconnecting := ', client.id);
-        });
-
-        broker.on('clientDisconnected', function (client) {
-            console.log("=======Disconnected=======");
-            console.log(client.id);
-            console.log("")
-        });
-    }
+function broker_log(broker){
+    broker.on('clientConnected', function (client) {
+        console.log("=======Connected=======");
+        console.log(client.id);
+        console.log("")
+    });
+    broker.on('subscribed', function (topic, client) {
+        console.log("=======Subscribed=======");
+        console.log(client.id);
+        console.log("")
+    });
+    broker.on('unsubscribed', function (topic, client) {
+        console.log("=======Connected=======");
+        console.log(client.id, topic);
+        console.log("")
+    });
+    broker.on('clientDisconnecting', function (client) {
+        console.log('clientDisconnecting := ', client.id);
+    });
+    broker.on('clientDisconnected', function (client) {
+        console.log("=======Disconnected=======");
+        console.log(client.id);
+        console.log("")
+    });
 }
 
 module.exports = {init}

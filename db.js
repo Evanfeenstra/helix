@@ -1,6 +1,8 @@
 const { Client, Pool } = require('pg')
 const moment = require('moment')
 
+const PG_KEY = process.env.PG_KEY || 'aes_key_'
+
 let pool
 async function connect(){
   const db_url = process.env.DATABASE_URL
@@ -41,7 +43,10 @@ module.exports = {
   getStreamByIdAndLock: async (id) => {
     await pool.query(`BEGIN;`)
     // FOR UPDATE locks the transaction
-    const r = await pool.query(`SELECT * FROM streams WHERE id=$1 FOR UPDATE;`,[id])
+    const r = await pool.query(`SELECT *, 
+      PGP_SYM_DECRYPT(seed::bytea, 'aes_key_') as seed 
+      FROM streams WHERE id=$1 FOR UPDATE;`,
+    [id])
     let locked = 'TRUE'
     let last_locked = 'now()' // first time
     const savedLocked = r.rows && r.rows[0] && r.rows[0].locked
@@ -65,9 +70,9 @@ module.exports = {
 
   createNewStream: async (s) => pool.query(`
     INSERT INTO streams(id,first_root,last_root,next_root,seed,side_key,start,locked)
-    VALUES($1,$2,$3,$4,$5,$6,$7,FALSE)     
+    VALUES($2,$3,$4,$5,PGP_SYM_ENCRYPT($6,$1),$7,$8,FALSE)
     ON CONFLICT DO NOTHING`, 
-  [s.id,s.first_root,s.last_root,s.next_root,s.seed,s.side_key,s.start]),
+  [PG_KEY,s.id,s.first_root,s.last_root,s.next_root,s.seed,s.side_key,s.start]),
 
   updateStreamMamState: async (s) => pool.query(`
     UPDATE streams SET 
@@ -79,20 +84,3 @@ module.exports = {
   connect
 
 }
-
-/*
-
-CREATE TABLE streams (
-  id TEXT PRIMARY KEY,
-  device_id INT,
-  first_root TEXT,
-  last_root TEXT,
-  next_root TEXT,
-  seed TEXT,
-  side_key TEXT,
-  start int,
-  locked BOOLEAN,
-  last_locked timestamptz
-);
-
-*/

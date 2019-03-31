@@ -93,7 +93,7 @@ function publish(content, exchange, routingKey = CONSUMER_QUEUE) {
     pubChannel.publish(
       exchange,
       routingKey,
-      content,
+      new Buffer(JSON.stringify(content)),
       { persistent: true },
       function(err, ok) {
         if (err) {

@@ -9,7 +9,7 @@ async function connect(){
     return {mqttClient:client}
   } catch(e) {
     throw e
-  }  
+  }
 }
 
 function init() {
@@ -36,9 +36,8 @@ function init() {
         if(!m) return
 
         const msg = processor.makeId(m,topic)
-
+        amqp.publish(msg)
         console.log("mqtt receive",JSON.stringify(msg))
-        amqp.publish(new Buffer(JSON.stringify(msg)))
       })
 
       client.on('error',function(err){reject(err)})

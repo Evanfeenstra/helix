@@ -2,7 +2,6 @@ require ('newrelic');
 require('dotenv').config()
 const amqp = require('./amqp')
 const db = require('./db')
-const iota = require('./iota')
 const mqtt = require('./mqtt')
 const api = require('./api')
 const broker = require('./broker')
@@ -22,12 +21,10 @@ async function main() {
     await api.init(r)
 
   } catch(e) {
+    console.log("ERROR =========")
     console.error(e)
     process.kill(process.pid,'SIGTERM')
   }
-
-  // console.log("TEST")
-  // mam.postMam('test',{hi:'hi'},'sideKey')
 
   console.log("===== READY =====")
 }

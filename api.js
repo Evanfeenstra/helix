@@ -6,7 +6,6 @@ const helmet = require('helmet')
 const amqp = require('./amqp')
 const mam = require("./mam");
 const {processor} = require("./utils");
-const {fromTrytes, toTrytes} = require('./iota')
 const http = require('http')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret'
@@ -32,7 +31,7 @@ async function init(r) {
   app.post('/stream/:id', async (req, res, next) => {
     console.log('/stream')
     const m = processor.makeId(req.body, req.url)
-    amqp.publish(new Buffer(JSON.stringify(m)))
+    amqp.publish(m)
     return res.status(200).json({posted:true})
   })
 
