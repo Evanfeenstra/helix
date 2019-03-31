@@ -52,6 +52,10 @@ async function init(r) {
     return res.status(200).json(m)
   })
 
+  app.get('/ping', (req,res) => {
+    return res.status(200).json('pong')
+  })
+
   try{
     const success = await listen(app, broker, API_PORT)
     console.log(success)

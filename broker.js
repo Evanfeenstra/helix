@@ -36,7 +36,7 @@ var authorizeSubscribe = function (client, topic, callback) {
 function start(moscaSetting, BROKER_DEBUG) {
   return new Promise(function(resolve, reject) {
     const broker = new mosca.Server(moscaSetting)
-
+    console.log(broker)
     broker.on('ready', () => {
         broker.authenticate = authenticate;
         broker.authorizePublish = authorizePublish;
@@ -94,7 +94,7 @@ function start(moscaSetting, BROKER_DEBUG) {
 
 async function init() {
     const {MQTT_PORT, WS_PORT, BROKER_DEBUG} = process.env
-
+    console.log('init mosca')
     var moscaSetting = {
         interfaces: [
             { type: "mqtt", port: parseInt(MQTT_PORT) || 1883 },
@@ -111,8 +111,9 @@ async function init() {
 
         //logger: { name: 'MoscaServer', level: 'debug' },
     }
-
+    console.log(moscaSetting)
     try {
+        console.log(BROKER_DEBUG)
         const broker = await start(moscaSetting, BROKER_DEBUG)
         if(BROKER_DEBUG) broker_log(broker)
         console.log('[mosca] init')
