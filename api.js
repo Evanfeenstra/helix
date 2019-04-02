@@ -4,9 +4,11 @@ const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const helmet = require('helmet')
 const amqp = require('./amqp')
-const mam = require("./mam");
+const mam = require("./mam")
+const { trytesToAscii } = require('@iota/converter')
 const {processor} = require("./utils");
 const http = require('http')
+const db = require('./db')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret'
 
@@ -34,6 +36,20 @@ async function init(r) {
     console.log(m)
     amqp.publish(m)
     return res.status(200).json({posted:true})
+  })
+
+  app.get('/stream/:id', async (req,res) => {
+    console.log('GET /stream/' + req.params.id)
+    const r = await db.getStreamById(req.params.id)
+    console.log(r)
+    if(r.rowCount){
+      const stream = r.rows[0]
+      const root = stream.last_root
+      const sideKey = JSON.parse(trytesToAscii(stream.side_key))
+      url = `https://mam.iota.studio?root=${root}&sideKey=${sideKey}&mode=restricted`
+      return res.status(200).json({url})
+    }
+    return res.status(400).json({error:"Not Found"})
   })
 
   app.post('/message', async (req, res, next) => {
