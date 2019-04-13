@@ -2,9 +2,9 @@
 
 **Digital Twins on the IOTA Tangle using Masked Authenticated Messaging**
 
-Helix is an MQTT broker that stores data in Masked Authenticated Message streams on the IOTA Tangle. It can be used to create online digital twins of physical assets in the real world. At [H2H](https://h2h.ai), we use it to create immutable records of data points coming from GPS trackers and other IoT devices. Records in Helix cannot be tampered with, meaning that data can be used in situations where reliablility and verifiability are required, such as insurance claims or asset custody records. The features of Helix are:
+Helix is an MQTT broker that stores data in Masked Authenticated Message streams on the IOTA Tangle. It can be used to create online digital twins of physical assets in the real world. At [H2H](http://h2h.ai), we use it to create immutable records of data points coming from GPS trackers and other IoT devices. Records in Helix cannot be tampered with, meaning that data can be used in situations where reliablility and verifiability are required, such as insurance claims or asset custody records.
 
-- Can run as a full MQTT broker, or as an MQTT client of another broker.
+- Helix can run as a full MQTT broker, or as an MQTT client of another broker.
 - Uses RabbitMQ queues to ensure that messages are posted to the tangle in the right order. If many messages are simultaneously received (like when a device comes back online after losing connectivity), Helix will post these messages to the correct stream in the order they were received.
 - Simple REST api, that we will be updating with more features soon.
 - Uses Postgres only for storing MAM stream metadata (root, index, sideKey, etc) so storage requirements are quite low.
@@ -36,7 +36,7 @@ CLOUDAMQP_URL = ***
 
 IOTA_PROVIDER = ***
 
-# these are if you want to connect to a separate MQTT broker
+# these are optional, for connecting to a separate MQTT broker
 MQTT_URL = ***
 MQTT_USERNAME = ***
 MQTT_PASSWORD = ***
@@ -48,6 +48,7 @@ MQTT_TOPICS = something/#
 - `git clone https://github.com/Evanfeenstra/helix`
 - `cd helix`
 - `yarn`
+- In your Postgres instance, install `pgcrypto` and run the script in [streams.sql](https://github.com/Evanfeenstra/helix/blob/master/streams.sql)
 - `node index.js`
 
 ### deploying to heroku
