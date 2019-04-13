@@ -13,7 +13,7 @@ Helix is an MQTT broker that stores data in Masked Authenticated Message streams
 
 ### quick test
 
-Run this `curl` to post a simple message to the Tangle!
+Helix is running live on the IOTA mainnet right now. Run this `curl` to post a simple message to the Tangle!
 ```bash
 curl --header "Content-Type: application/json" \
   --request POST \
