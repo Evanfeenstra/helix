@@ -9,6 +9,7 @@ Helix is an MQTT broker that stores data in Masked Authenticated Message streams
 - Simple REST api, that we will be updating with more features soon.
 - Uses Postgres only for storing MAM stream metadata (root, index, sideKey, etc) so storage requirements are quite low.
 
+![helix broker](https://github.com/Evanfeenstra/helix/blob/master/helix-broker.png)
 
 ### quick test
 
@@ -55,7 +56,7 @@ You can run Helix on Heroku for free! Heroku also has add-ons for Postgres and C
 
 - `heroku create your-broker-name`
 - in the heroku web dashboard, provision Postgres DB and CloudAMQP
-- run `heroku pg:psql` to enter the Postgres CLI, and run the script in streams.sql
+- run `heroku pg:psql` to enter the Postgres CLI, and run the script in [streams.sql](https://github.com/Evanfeenstra/helix/blob/master/streams.sql)
 - in psql also run `CREATE EXTENSION IF NOT EXISTS pgcrypto;`
 - `heroku config:set IOTA_PROVIDER=https://dyn.tangle-nodes.com:443`
 - `git push origin heroku`
