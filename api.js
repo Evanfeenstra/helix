@@ -41,7 +41,6 @@ async function init(r) {
   app.get('/stream/:id', async (req,res) => {
     console.log('GET /stream/' + req.params.id)
     const r = await db.getStreamById(req.params.id)
-    console.log(r)
     if(r.rowCount){
       const stream = r.rows[0]
       const root = stream.last_root
@@ -82,7 +81,7 @@ async function init(r) {
 
 function listen(app, broker, API_PORT) {
   return new Promise(function(resolve, reject) {
-    const port = API_PORT || 5001
+    const port = API_PORT || 5000
     const server = http.createServer(app)
     if(broker){
       broker.attachHttpServer(server)
