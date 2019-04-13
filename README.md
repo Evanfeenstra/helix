@@ -4,9 +4,10 @@
 
 Helix is an MQTT broker that stores data in Masked Authenticated Message streams on the IOTA Tangle. It can be used to create online digital twins of physical assets in the real world. At [H2H](https://h2h.ai), we use it to create immutable records of data points coming from GPS trackers and other IoT devices. Records in Helix cannot be tampered with, meaning that data can be used in situations where reliablility and verifiability are required, such as insurance claims or asset custody records. The features of Helix are:
 
-- Helix can run as a full MQTT broker, or as an MQTT client of another broker.
+- Can run as a full MQTT broker, or as an MQTT client of another broker.
 - Uses RabbitMQ queues to ensure that messages are posted to the tangle in the right order. If many messages are simultaneously received (like when a device comes back online after losing connectivity), Helix will post these messages to the correct stream in the order they were received.
-- simple REST api, that we will be updating with more features soon.
+- Simple REST api, that we will be updating with more features soon.
+- Uses Postgres only for storing MAM stream metadata (root, index, sideKey, etc) so storage requirements are quite low.
 
 
 ### quick test
@@ -26,7 +27,7 @@ You will see a response like this: `{"url":"https://mam.iota.studio?root=AKUERAJ
 
 ### configuring helix
 
-Helix can be configured with environment variables. If running locally, siply make a `.env` file and fill in the following values:
+Helix can be configured with environment variables. If running locally, simply make a `.env` file and fill in the following values:
 ```
 DATABASE_URL = ***
 
@@ -34,11 +35,11 @@ CLOUDAMQP_URL = ***
 
 IOTA_PROVIDER = ***
 
+# these are if you want to connect to a separate MQTT broker
 MQTT_URL = ***
 MQTT_USERNAME = ***
 MQTT_PASSWORD = ***
 MQTT_TOPICS = something/#
-
 ```
 
 ### running helix locally
@@ -49,6 +50,8 @@ MQTT_TOPICS = something/#
 - `node index.js`
 
 ### deploying to heroku
+
+You can run Helix on Heroku for free! Heroku also has add-ons for Postgres and CloudAMQP. Once you provision these, Heroku will add those automatically to your environment.
 
 - `heroku create your-broker-name`
 - in the heroku web dashboard, provision Postgres DB and CloudAMQP
