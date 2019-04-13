@@ -24,7 +24,7 @@ Then after 5-10 seconds, run the following to get the MAM root
 ```bash
 curl https://helix-broker.herokuapp.com/stream/test 
 ```
-The response will contain a URL like this: `[https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted](https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted)`. Copy the URL into your browser to view the MAM stream online!
+The response will contain a URL like this: [https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted](https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted). Copy the URL into your browser to view the MAM stream online!
 
 ### configuring helix
 
