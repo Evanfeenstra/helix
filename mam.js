@@ -75,7 +75,7 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
 
   let message
   try {
-    message = Mam.create(mamState, toTrytes(JSON.stringify(msg)));
+    message = Mam.create(mamState, toTrytes(msg));
   } catch(e) {
     throw 'Could not create message  ' + e.message
   }

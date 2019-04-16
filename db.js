@@ -6,7 +6,6 @@ const PG_KEY = process.env.PG_KEY || 'aes_key_'
 let pool
 async function connect(){
   const db_url = process.env.DATABASE_URL
-  console.log(db_url)
   if(!db_url) throw new Error('Missing DATABASE_URL in env')
 
   pool = new Pool({
