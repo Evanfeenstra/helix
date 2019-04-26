@@ -24,7 +24,7 @@ const processMsg = async msg => {
   try {
     await mam.postMam(m.id, m)
   } catch(e) {
-    console.log("ERROR HERE",e)
+    //console.log("ERROR HERE",e)
     // if there is some weird error, unlock it to try again
     if(e!=='mam_channel_locked'){
       db.unlockStream(m.id)
@@ -177,7 +177,7 @@ function closeOnErr(err) {
 //   else i++
 //   publish(new Buffer(JSON.stringify({body:"work work work",id:i})), "", CONSUMER_QUEUE);
 // }, SEC*1000);
-
+let b=false;
 function blockConsoleErrors(strings) {
   function intercept(method) {
     var original = console[method];
@@ -186,7 +186,9 @@ function blockConsoleErrors(strings) {
       // block this error message if contained in any of the Error stack
       if (args && strings.find(s => args.some(a=>{
         const msg = a instanceof Error ? a.message : a
-        //console.log(msg)
+        if(!b) console.log('MAM channel busy.....retry...')
+        b = true
+        setTimeout(()=>{b=false},100)
         return msg&&msg.includes(s)
       }))) {
         return;
@@ -197,6 +199,6 @@ function blockConsoleErrors(strings) {
   var methods = ["error"];
   for (var i = 0; i < methods.length; i++) intercept(methods[i]);
 }
-//blockConsoleErrors(["mam_channel_locked"]);
+blockConsoleErrors(["mam_channel_locked"]);
 
 module.exports = { connect, publish };

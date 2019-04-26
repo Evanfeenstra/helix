@@ -42,10 +42,12 @@ SIDE_KEY = ***
 # key for postgres pgcrypto
 PG_KEY = *** 
 
-# these are optional, for connecting to a separate MQTT broker
-MQTT_URL = ***
+# username/password for embedded MQTT broker
 MQTT_USERNAME = ***
 MQTT_PASSWORD = ***
+
+# these are optional, for connecting to a separate MQTT broker
+MQTT_URL = ***
 MQTT_TOPICS = something/#
 ```
 

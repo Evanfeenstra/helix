@@ -83,7 +83,7 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
   //console.log("CREATE MESSAGE",message)
 
   // Attach the payload.
-  console.log("ATTACHING TO TANGLE................",streamId,mamState.channel.start)
+  console.log(`ATTACHING TO TANGLE ===> id: ${streamId}, index: ${mamState.channel.start}`)
   try {
     const attached = await Mam.attach(message.payload, message.address, 3, 14);
     //console.log(attached)
@@ -122,8 +122,11 @@ MAM.prototype.postMam = async function(streamId, msg, sk) {
     throw 'Stream not created/updated  ' + e.message
   }
 
-  console.log("LAST ROOT:", message.root);
+  //console.log("LAST ROOT:", message.root);
+  console.log('')
+  console.log(' ==========> Message Posted!!! <=============')
   console.log(`https://mam.iota.studio?root=${message.root}&sideKey=${sideKey}&mode=restricted`)
+  console.log('')
 
   if(this.broker){
     this.broker.pub({
