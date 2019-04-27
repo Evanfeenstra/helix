@@ -11,21 +11,6 @@ Helix is an MQTT broker that stores data in Masked Authenticated Message streams
 
 ![helix broker](https://github.com/Evanfeenstra/helix/blob/master/helix-broker.png)
 
-### quick test
-
-Helix is running live on the IOTA mainnet right now. Run this `curl` to post a simple message to the Tangle!
-```bash
-curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"test":123}' \
-  https://helix-broker.herokuapp.com/stream/test 
-```
-Then after 5-10 seconds, run the following to get the MAM root
-```bash
-curl https://helix-broker.herokuapp.com/stream/test 
-```
-The response will contain a URL like this: [https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted](https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted). Copy the URL into your browser to view the MAM stream online!
-
 ### configuring helix
 
 Helix can be configured with environment variables. If running locally, simply make a `.env` file and fill in the following values:
@@ -61,7 +46,7 @@ MQTT_TOPICS = something/#
 
 ### deploying to heroku
 
-You can run Helix on Heroku for free! Heroku also has add-ons for Postgres and CloudAMQP. Once you provision these, Heroku will add those automatically to your environment.
+You can run Helix on Heroku for free! Heroku also has add-ons for Postgres and CloudAMQP. Once you provision these, Heroku will add those automatically to your environment. Unfortunately Heroku does not support direct TCP routing that is required to host Helix as an MQTT broker... instead, you can configure the `MQTT_URL`, `MQTT_USERNAME`, and `MQTT_PASSWORD` env variables to make Helix act as an MQTT client to another broker like Mosquitto. This is what we do at H2H, which allows us to handle device authentication separately from Helix.
 
 - `heroku create your-broker-name`
 - in the heroku web dashboard, provision Postgres DB and CloudAMQP
@@ -69,3 +54,18 @@ You can run Helix on Heroku for free! Heroku also has add-ons for Postgres and C
 - in psql also run `CREATE EXTENSION IF NOT EXISTS pgcrypto;`
 - `heroku config:set IOTA_PROVIDER=https://dyn.tangle-nodes.com:443`
 - `git push origin heroku`
+
+### quick test
+
+Helix is running live on the IOTA mainnet right now. Run this `curl` to post a simple message to the Tangle!
+```bash
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"test":123}' \
+  https://helix-broker.herokuapp.com/stream/test 
+```
+Then after 5-10 seconds, run the following to get the MAM root
+```bash
+curl https://helix-broker.herokuapp.com/stream/test 
+```
+The response will contain a URL like this: [https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted](https://mam.iota.studio?root=AKUERAJPZTWGHTPIZQXMKOAESVYVLQTTZBPSMAWVRVLTEHK9HJOVHASDGYJZBYTPX9NLUQNEGBTQRZZQN&sideKey=test&mode=restricted). Copy the URL into your browser to view the MAM stream online!
