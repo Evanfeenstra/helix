@@ -42,6 +42,7 @@ MQTT_TOPICS = something/#
 - `git clone https://github.com/Evanfeenstra/helix`
 - `cd helix`
 - `yarn`
+- set your `DATABASE_URL`, `CLOUDAMQP_URL`, and `IOTA_PROVIDER`
 - In your Postgres instance, install `pgcrypto` and run the script in [streams.sql](https://github.com/Evanfeenstra/helix/blob/master/streams.sql)
 - `node index.js`
 
