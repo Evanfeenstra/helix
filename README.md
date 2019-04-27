@@ -33,6 +33,7 @@ MQTT_PASSWORD = ***
 
 # these are optional, for connecting to a separate MQTT broker
 MQTT_URL = ***
+# use this option to filter topics coming from external broker
 MQTT_TOPICS = something/#
 ```
 
